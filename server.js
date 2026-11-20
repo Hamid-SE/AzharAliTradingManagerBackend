@@ -5,7 +5,7 @@ import cors from 'cors'
 import apiRouter from './routes/api.js'
 
 const app = express()
-const PORT = Number(process.env.BACKEND_PORT) || 4000
+const PORT = Number(process.env.PORT || process.env.BACKEND_PORT) || 4000
 
 app.use(
   cors({
