@@ -1,34 +1,41 @@
-# Deploy backend (recommended: Railway)
+# Deploy backend on Render
 
-## Railway (GitHub — works with private repos)
+## One-time (Dashboard)
 
-1. Open [railway.app](https://railway.app) → **Login with GitHub** (Hamid-SE).
-2. **New Project** → **Deploy from GitHub repo**.
-3. Choose **AzharAliTradingManagerBackend** (root of repo — no monorepo folder).
-4. Wait for the first build. Open the service → **Variables** → add:
+1. Sign in at [dashboard.render.com](https://dashboard.render.com) with GitHub (**Hamid-SE**).
+2. **New → Blueprint**.
+3. Connect **AzharAliTradingManagerBackend** → branch **main** → Blueprint path **`render.yaml`**.
+4. Review the web service → **Apply**.
+5. Open the new service → **Environment** → add values (copy from your local `backend/.env`, never commit):
 
    | Key | Required |
    |-----|----------|
-   | `NODE_ENV` | `production` |
    | `MONGODB_URI` | Yes |
-   | `AUTH_SECRET` | Yes (match frontend / Vercel) |
+   | `AUTH_SECRET` | Yes (same as Vercel frontend later) |
    | `ADMIN_EMAIL` | Yes |
    | `ADMIN_PASSWORD` | Yes |
    | `ADMIN_NAME` | Optional |
-   | `FRONTEND_ORIGIN` | Vercel URL when ready (or `http://localhost:3000` for testing) |
+   | `FRONTEND_ORIGIN` | Yes after frontend URL exists |
    | `GEMINI_API_KEY` | Optional |
 
-5. **Settings** → **Networking** → **Generate domain** (public HTTPS URL).
-6. Redeploy if needed after variables are set.
+6. Save — Render redeploys. Wait until deploy status is **Live**.
 
 ## Test
 
-- `https://YOUR-APP.up.railway.app/health` → `{"ok":true}`
+- `https://YOUR-SERVICE.onrender.com/health` → `{"ok":true}`
+- POST `https://YOUR-SERVICE.onrender.com/api/auth/login` with JSON `{"email":"...","password":"..."}` → `200`
+- With session cookie, `GET /api/dashboard` → JSON metrics
 
-Use that URL as `BACKEND_URL` in Vercel (frontend).
+`NODE_ENV` is set to `production` in the Blueprint (secure cookies — use HTTPS only).
 
----
+## Manual web service (no Blueprint)
 
-## Render (optional)
+**New → Web Service** → same repo → Build: `npm install`, Start: `npm start`, Health: `/health`, same env vars.
 
-See `render.yaml` in this repo. Use **Git Provider** + repo access on GitHub, not “Public Git Repository” (repo is private).
+## Public repo on Render (no GitHub app)
+
+If the repo is **public**, on **New Web Service** → **Public Git Repository** tab:
+
+`https://github.com/Hamid-SE/AzharAliTradingManagerBackend`
+
+Click **Connect**, then set the same build/start commands and environment variables.
