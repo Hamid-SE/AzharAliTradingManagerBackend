@@ -3,8 +3,6 @@ services:
     name: azhar-trading-api
     runtime: node
     plan: free
-    repo: https://github.com/Hamid-SE/AzharAliTradingManagerBackend
-    branch: main
     buildCommand: npm install
     startCommand: npm start
     healthCheckPath: /health
